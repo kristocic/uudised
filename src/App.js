@@ -1,24 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
+import { HashRouter, Routes, Route } from "react-router-dom";
+
+import Layout from './Pages/Layout';
+import Home from './Pages/Home';
+import Contact from './Pages/Contact';
+import News from './Pages/News';
+
+const contentful = require("contentful");
+
+export const client = contentful.createClient({
+  space: '71m0kfhi6izb',
+  environment: 'master',
+  accessToken: 'TFo53g-B6lhOOrvpPonbZfX-dvrXc6fEFJLUXTrt6wk'
+})
 
 function App() {
+  client
+  .getEntry('3dvy3jS6PUOOuc8ArLYrYb')
+  .then((entry) => {console.log (entry)})
+  .catch((err) => {console.log (err)})
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="news/:newsId" element={<News />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="*" element={<h1>Not Found</h1>} />
+        </Route>
+      </Routes>
+    </HashRouter>
   );
 }
 
